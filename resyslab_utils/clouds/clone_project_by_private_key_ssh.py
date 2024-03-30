@@ -11,21 +11,20 @@ parser = ArgumentParser()
 parser.add_argument('--giturl',default="",type=str,help="giturl to clone")
 parser.add_argument('--folder',default="",type=str,help="folder clone to")
 parser.add_argument('--branch',default="DEV",type=str,help="branch to clone")
-parser.add_argument('--private-key',default="",type=str,help="private ssh key for authority")
+parser.add_argument('--private-key-path',default="",type=str,help="private ssh key for authority")
 
 args = parser.parse_args()
-name_key = args.private_key.split("/")[-1]
+name_key = args.private_key_path.split("/")[-1]
 
 def init_project(scope=globals(), cfg={}, **kwargs):
-   
     import os
-    if not os.path.exists('/kaggle/working/resyslab_utils'):
+    if not os.path.exists(f'{root_dir}/resyslab_utils'):
         print("\033[1;31m---------------you could have cloned resyslab_utils first!---------------\033[0m")
         return
     # init prj_rsa
     rsa_dir = os.path.expanduser('~/.ssh/')
     os.makedirs(rsa_dir, exist_ok=True)
-    subprocess.run(["cp", args.private_key, os.path.join(rsa_dir, name_key)], check=True)
+    subprocess.run(["cp", args.private_key_path, os.path.join(rsa_dir, name_key)], check=True)
     subprocess.run(["chmod", "600", os.path.join(rsa_dir, name_key)], check=True)
 
     # Configuring SSH for GitHub
