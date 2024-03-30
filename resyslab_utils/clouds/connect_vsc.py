@@ -5,7 +5,6 @@ def connect_vscode(scope = globals(), cfg = {}, **kwargs):
     user_secrets = UserSecretsClient()
     print(kwargs['folder'])
     print(kwargs['giturl'])
-    %run /kaggle/working/resyslab_utils/resyslab_utils/clouds/cloud_setup.py
     kaggle_cfg = {}
     for name in ['NGROK_TOKEN_1', 'ID_RSA_PUB', 'SSH_PASS']:
         try:
