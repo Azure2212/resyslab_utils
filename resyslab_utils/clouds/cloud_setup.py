@@ -142,7 +142,7 @@ def start_ngrok(ngrok_tokens = [],
     pass # start_ngrok
 
 def start_vscode(ws_dir = ".", 
-                 password = "12345", 
+                 password = "", 
                  vscode_dir = '~/.vscode', 
                  install = False, 
                  extensions = ["ms-python.python", 
