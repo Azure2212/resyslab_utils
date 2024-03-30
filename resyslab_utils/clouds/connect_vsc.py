@@ -26,3 +26,5 @@ def connect_vscode(scope = globals(), cfg = {}, **kwargs):
     
     # open port ssh to public
     cs.start_ngrok([ngrok_token_val])
+
+connect_vscode()
