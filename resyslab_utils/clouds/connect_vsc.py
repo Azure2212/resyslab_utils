@@ -4,8 +4,6 @@ def connect_vscode(scope = globals(), cfg = {}, **kwargs):
     import base64
     from kaggle_secrets import UserSecretsClient
     user_secrets = UserSecretsClient()
-    print(kwargs['folder'])
-    print(kwargs['giturl'])
     kaggle_cfg = {}
     for name in ['NGROK_TOKEN_1', 'ID_RSA_PUB', 'SSH_PASS']:
         try:
