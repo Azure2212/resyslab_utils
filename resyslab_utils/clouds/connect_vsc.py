@@ -1,3 +1,4 @@
+import cloud_setup as cs
 def connect_vscode(scope = globals(), cfg = {}, **kwargs):
     # kaggle config
     import base64
@@ -18,10 +19,10 @@ def connect_vscode(scope = globals(), cfg = {}, **kwargs):
     ssh_pass_val    = kaggle_cfg.get("SSH_PASS", "12345")
     
     # ssh
-    start_ssh(id_rsa_pub=id_rsa_pub,
+    cs.start_ssh(id_rsa_pub=id_rsa_pub,
               install_ssh=True, 
               config_ssh=True, 
               password=ssh_pass_val)
     
     # open port ssh to public
-    start_ngrok([ngrok_token_val])
+    cs.start_ngrok([ngrok_token_val])
