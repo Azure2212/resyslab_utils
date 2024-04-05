@@ -15,7 +15,8 @@ ssh_config_content = f"""
         StrictHostKeyChecking no
         IdentityFile ~/.ssh/{private_key_name}
     """
-
+with open(ssh_config_path, 'w') as f:
+    f.write(ssh_config_content)
 
 # List the files in the specified directory
 subprocess.run(['ls',  args.private_key_path])
@@ -28,7 +29,4 @@ subprocess.run(['chmod', '600', f'~/.ssh/{private_key_name}'])
 
 # List the files in the ~/.ssh directory
 subprocess.run(['ls', '~/.ssh'])
-
-with open(ssh_config_path, 'w') as f:
-    f.write(ssh_config_content)
 print("print successful!")
