@@ -21,7 +21,7 @@ ssh_config_content = f"""
 subprocess.run(['ls',  args.private_key_path])
 
 # Copy sguprj24_rsa file to the ~/.ssh directory
-subprocess.run(['cp',  args.private_key_path, '~/.ssh'])
+subprocess.run(['cp',  args.private_key_path, f'~/.ssh/{private_key_name}'])
 
 # Change the permission of sguprj24_rsa file to 600
 subprocess.run(['chmod', '600', f'~/.ssh/{private_key_name}'])
@@ -31,3 +31,4 @@ subprocess.run(['ls', '~/.ssh'])
 
 with open(ssh_config_path, 'w') as f:
     f.write(ssh_config_content)
+print("print successful!")
