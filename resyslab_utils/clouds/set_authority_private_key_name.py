@@ -18,15 +18,20 @@ ssh_config_content = f"""
 with open(ssh_config_path, 'w') as f:
     f.write(ssh_config_content)
 
-# List the files in the specified directory
+
+subprocess.run(['cd', '/kaggle/working'], shell=True)
+
+
+directory = os.path.expanduser('~/.ssh')  # This will expand '~' to the user's home directory
+
+os.makedirs(directory, exist_ok=True)
+
 subprocess.run(['ls',  args.private_key_path])
 
-# Copy sguprj24_rsa file to the ~/.ssh directory
 subprocess.run(['cp',  args.private_key_path, f'~/.ssh/{private_key_name}'])
 
-# Change the permission of sguprj24_rsa file to 600
 subprocess.run(['chmod', '600', f'~/.ssh/{private_key_name}'])
 
-# List the files in the ~/.ssh directory
 subprocess.run(['ls', '~/.ssh'])
+
 print("print successful!")
