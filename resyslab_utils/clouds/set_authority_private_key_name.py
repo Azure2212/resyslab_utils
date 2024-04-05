@@ -5,15 +5,14 @@ parser.add_argument('--private-key-path',default="",type=str,help="private ssh p
 
 args = parser.parse_args()
 private_key_name = args.private_key_path.split("/")[-1]
+print(args.private_key_path)
 
 ssh_config_path = os.path.expanduser('~/.ssh/config')
 ssh_config_content = f"""
     Host github.com
-        HostName ssh.github.com
-        User git
-        Port 443
-        StrictHostKeyChecking no
-        IdentityFile ~/.ssh/{private_key_name}
+       PreferredAuthentications publickey
+       StrictHostKeyChecking no
+       IdentityFile ~/.ssh/{private_key_name}
     """
 with open(ssh_config_path, 'w') as f:
     f.write(ssh_config_content)
