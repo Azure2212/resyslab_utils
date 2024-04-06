@@ -217,11 +217,12 @@ def clone_project_from_github(scope=globals(), cfg={}, **kwargs):
 
     if not os.path.exists(kwargs['folder']):
         if('branch' not in kwargs or kwargs['branch'] == ""):
-            get_ipython().system(f"git clone {kwargs['giturl']} {kwargs['folder']}")     
+            get_ipython().system(f"git clone --branch main {kwargs['giturl']} {kwargs['folder']}")     
         else:
             get_ipython().system(f"git clone --branch {kwargs['branch']} {kwargs['giturl']} {kwargs['folder']}")  
     else:
-        get_ipython().system(f"!git pull {kwargs['folder']}")  
+        get_ipython().system(f"cd {kwargs['folder']}") 
+        get_ipython().system(f"git pull")  
         
     if scope is not None:
         scope.update(locals())
