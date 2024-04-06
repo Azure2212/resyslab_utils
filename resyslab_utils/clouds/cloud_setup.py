@@ -140,8 +140,6 @@ def start_ngrok(ngrok_tokens = [],
     print(f"")
     print(f'{"-" * 10} Finished {"-"*10}\n')
     pass # start_ngrok
-
-def start_vscode(ws_dir = ".", 
                  password = "", 
                  vscode_dir = '~/.vscode', 
                  install = False, 
@@ -182,49 +180,59 @@ def start_vscode(ws_dir = ".",
     print(f'{"-" * 10} Finished {"-"*10}\n')
     pass # start_vscode
 
-def setup_config_github(id_rsa_val, id_rsa_name, hostname="github.com", append = False, show_id_rsa = False):
-    print(f'{"*" * 10} CONFIG GITHUB {"*"*10}')
-    
-    print('> Add id_rsa...')
-    get_ipython().system('mkdir -p ~/.ssh')
-    get_ipython().system(f'echo "{id_rsa_val}" > ~/.ssh/{id_rsa_name}')
-    get_ipython().system(f'chmod 600 ~/.ssh/{id_rsa_name}')
-
-    ssh_config  = f"Host {hostname}\n"
-    ssh_config +=  "    HostName ssh.github.com\n"
-    ssh_config +=  "    User git\n"
-    ssh_config +=  "    Port 443\n"
-    ssh_config +=  "    StrictHostKeyChecking no\n"
-    ssh_config += f"    IdentityFile ~/.ssh/{id_rsa_name}"
-
-    if append is False:
-        print('> Add config file...')
-        get_ipython().system('echo "$ssh_config" > ~/.ssh/config')
-    else:
-        print('> Append config file...')
-        get_ipython().system('echo "$ssh_config" >> ~/.ssh/config')
-
-    print('> List ~/.ssh...')
-    get_ipython().system('ls ~/.ssh')
-    
-    if show_id_rsa:
-        print('> Show id_rsa...')
-        get_ipython().system(f'cat ~/.ssh/{id_rsa_name}')
-    
-    print('> Show config...')
-    get_ipython().system(f'cat ~/.ssh/config')
-    
-    print('> Test ssh...')
-    get_ipython().system(f'ssh {hostname}')
-    pass # setup_config_github
-
-def base64_encode(s):
+def setup_github_config(id_rsa_path):
     import os
-    result = os.popen(f'echo "{s}" | base64 -w 0').read().strip()
-    return result
-    pass # base64_encode
+    from IPython import get_ipython
+    
+    print("> Setup ssh github...")
+    
+    key_name = os.path.basename(id_rsa_path)
+    key_path = f'~/.ssh/{key_name}'
+    print(f"Key name: {key_name}")
+    
+    get_ipython().system("mkdir -p ~/.ssh")
+    
+    print(f'Copy: {id_rsa_path} --> {key_path}')
+    get_ipython().system(f"cp '{id_rsa_path}' ~/.ssh/{key_name}")
+    get_ipython().system(f"chmod 600 {key_path}")
+    print("setup github_config finished")
 
-def base64_decode(s):
+    ssh_config_path = os.path.expanduser('~/.ssh/config')
+    ssh_config_content = f"""
+    Host github.com
+        HostName ssh.github.com
+        User git
+        Port 443
+        StrictHostKeyChecking no
+        IdentityFile ~/.ssh/{key_name}
+    """
+    with open(ssh_config_path, 'w') as f:
+        f.write(ssh_config_content)
+
+    pass # setup_github_config
+
+def connect_vscode(scope = globals(), cfg = {}, **kwargs):
+    # kaggle config
     import base64
-    return base64.b64decode(s).decode('ascii')
-    pass # base64_decode
+    from kaggle_secrets import UserSecretsClient
+    user_secrets = UserSecretsClient()
+    kaggle_cfg = {}
+    for name in ['NGROK_TOKEN_1', 'ID_RSA_PUB', 'SSH_PASS']:
+        try:
+            kaggle_cfg[name] = user_secrets.get_secret(name)
+        except:
+            pass    
+    kaggle_cfg.update(**cfg)
+
+    ngrok_token_val = kaggle_cfg.get("NGROK_TOKEN_1", "")
+    id_rsa_pub      = kaggle_cfg.get("ID_RSA_PUB", "")
+    ssh_pass_val    = kaggle_cfg.get("SSH_PASS", "12345")
+    
+    # ssh
+    start_ssh(id_rsa_pub=id_rsa_pub,
+              install_ssh=True, 
+              config_ssh=True, 
+              password=ssh_pass_val)
+    
+    # open port ssh to public
+    start_ngrok([ngrok_token_val])
