@@ -203,7 +203,7 @@ def connect_vscode(scope = globals(), cfg = {}, **kwargs):
     start_ngrok([ngrok_token_val])
 
 
-def init_project(scope=globals(), cfg={}, **kwargs):
+def clone_project_from_github(scope=globals(), cfg={}, **kwargs):
     import os
     from IPython import get_ipython
     if not os.path.exists(f'{root_dir}/resyslab_utils'):
@@ -217,9 +217,9 @@ def init_project(scope=globals(), cfg={}, **kwargs):
 
     if not os.path.exists(kwargs['folder']):
         if('branch' not in kwargs or kwargs['branch'] == ""):
-            get_ipython().system(f"!git clone {kwargs['giturl']} {kwargs['folder']}")     
+            get_ipython().system(f"git clone {kwargs['giturl']} {kwargs['folder']}")     
         else:
-            get_ipython().system(f"!git clone --branch {kwargs['branch']} {kwargs['giturl']} {kwargs['folder']}")  
+            get_ipython().system(f"git clone --branch {kwargs['branch']} {kwargs['giturl']} {kwargs['folder']}")  
     else:
         get_ipython().system(f"!git pull {kwargs['folder']}")  
         
