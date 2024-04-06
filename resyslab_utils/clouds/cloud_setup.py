@@ -146,19 +146,19 @@ def start_ngrok(ngrok_tokens = [],
     print(f'{"-" * 10} Finished {"-"*10}\n')
     pass # start_ngrok
                 
-def setup_github_config(id_rsa_path):
+def setup_github_config(private_key_path):
     from IPython import get_ipython
     
     print("> Setup ssh github...")
     
-    key_name = os.path.basename(id_rsa_path)
+    key_name = os.path.basename(private_key_path)
     key_path = f'~/.ssh/{key_name}'
     print(f"Key name: {key_name}")
     
     get_ipython().system("mkdir -p ~/.ssh")
     
-    print(f'Copy: {id_rsa_path} --> {key_path}')
-    get_ipython().system(f"cp '{id_rsa_path}' ~/.ssh/{key_name}")
+    print(f'Copy: {private_key_path} --> {key_path}')
+    get_ipython().system(f"cp '{private_key_path}' ~/.ssh/{key_name}")
     get_ipython().system(f"chmod 600 {key_path}")
     print("setup github_config finished")
 
@@ -233,3 +233,4 @@ def clone_project_from_github(scope=globals(), cfg={}, **kwargs):
     # Add any additional logic here
 
 # Example usage:
+print("\033[1;31m---------------Tuan's resyslab library started!---------------\033[0m")
