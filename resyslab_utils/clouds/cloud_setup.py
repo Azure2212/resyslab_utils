@@ -7,6 +7,11 @@ Created : 2024/01/18
 (c) Tran Anh Tuan 
 Mail: Dasanbob22122002@gmail.com
 """
+import os
+current_path = os.path.abspath(globals().get("__file__","."))
+current_dir = os.path.dirname(current_path)
+
+root_dir = os.path.abspath(f"{current_dir}/../../../")
 
 def start_ssh(id_rsa_pub = "", password = "", install_ssh = False, config_ssh = False):
     """
@@ -142,7 +147,6 @@ def start_ngrok(ngrok_tokens = [],
     pass # start_ngrok
                 
 def setup_github_config(id_rsa_path):
-    import os
     from IPython import get_ipython
     
     print("> Setup ssh github...")
@@ -197,3 +201,34 @@ def connect_vscode(scope = globals(), cfg = {}, **kwargs):
     
     # open port ssh to public
     start_ngrok([ngrok_token_val])
+
+
+def init_project(scope=globals(), cfg={}, **kwargs):
+    import os
+    from IPython import get_ipython
+    if not os.path.exists(f'{root_dir}/resyslab_utils'):
+        print("\033[1;31m---------------you could have cloned resyslab_utils first!---------------\033[0m")
+        return
+    # init prj_rsa
+
+    if('giturl' not in kwargs or 'folder' not in kwargs):
+        print("\033[1;31m---------------you could have chose giturl or folder to clone first!---------------\033[0m")
+        return
+
+    if not os.path.exists(kwargs['folder']):
+        if('branch' not in kwargs or kwargs['branch'] == ""):
+            get_ipython().system(f"!git clone {kwargs['giturl']} {kwargs['folder']}")     
+        else:
+            get_ipython().system(f"!git clone --branch {kwargs['branch']} {kwargs['giturl']} {kwargs['folder']}")  
+    else:
+        get_ipython().system(f"!git pull {kwargs['folder']}")  
+        
+    if scope is not None:
+        scope.update(locals())
+
+    # Call cloud_setup functions if needed
+    # Example: cloud_setup.start_ssh(...)
+
+    # Add any additional logic here
+
+# Example usage:
